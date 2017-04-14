@@ -1,0 +1,51 @@
+\documentclass[compress]{beamer}
+\usepackage[ngerman]{babel}
+\usepackage{graphicx}
+\usepackage{subfiles}
+\usepackage{listings}
+
+\graphicspath{{images/}}
+
+% \setbeameroption{show notes}
+
+\usetheme[noflama]{custom}
+
+\title{Railway-Oriented-Programming \break in Clojure}
+\subtitle{Funktionales Error-Handling}
+\author{Jan-Philipp Willem}
+\institute{Fakultät für Informatik\\Hochschule Mannheim}
+\date{EFP, SS2017}
+
+\begin{document}
+
+% \begin{frame}[noframenumbering,plain]
+% \end{frame}
+
+% TODO slide background
+\maketitle
+
+\section*{Gliederung}
+\begin{frame}[noframenumbering,plain]{Gliederung}
+  \tableofcontents[hideallsubsections]
+\end{frame}
+
+\section{Railway-Oriented-Programming}
+  \begin{frame}{"`Happy-Path"'}
+  \setcounter{framenumber}{1}
+    \begin{columns}[c]
+    \column{.5\textwidth}
+      \begin{itemize}
+        \item first
+        \item<2-> second
+        \item<3-> third
+        \item<4-> fourth
+      \end{itemize}
+    \column{.5\textwidth}
+    % \includegraphics[width=\textwidth]{parallel.pdf}
+    \end{columns}
+  \end{frame}
+
+  \note[itemize]{
+      \item 
+  }
+\end{document}
