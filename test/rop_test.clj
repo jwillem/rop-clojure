@@ -34,5 +34,8 @@
           (complement))))
 
 ;; (deftest )
+
 ;; (deftest bind-returns-failure-on-failure
-;;   (is))
+;;   (is (-> no
+;;           (bind #(no))
+;;           )))
