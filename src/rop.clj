@@ -6,31 +6,30 @@
 
 (defrecord Success [^Object success])
 (defrecord Failure [^Object failure])
-(defrecord Result [^Success success
-                   ^Failure failure])
+;; (defrecord Result [^Success success
+;;                    ^Failure failure])
 
 (defn bind
-  "Takes a one-track function and transforms it to a two-track function."
+  "Takes a one-track switch-function and connects a Failure-Path to its Result.
+  So it Fits in a Two-track-chain."
   [switch-function]
-  (fn [^Result result]
+  (fn [result]
     (match [result]
       [{:success s}] (switch-function s)
-      [{:failure f}] (Failure. f))))
+      [{:failure f}] (Failure. f)
+      :else (Failure. "Input was no Result!"))))
 
-(defn =>=
-  "Takes a two track-function and bind-pipes it to a further two-track-function."
+(defn >>=
+  "Takes a Result and pipes it through one or multiple switch-functions.
+  It will fit in a Two-track-chain.
+  "
   [result switch-function]
   ;; TODO use apply, use rest-argument to catch all terms
-  (bind switch-function result))
+  ((bind switch-function) result))
 
 (defn >=>
-  "Takes two switch functions and composes them together."
+  "Takes one or multiple switch-functions and composes them together."
   [switch1 switch2]
+  ;; TODO use apply, use rest-argument to catch all terms
   (-> switch1
       (bind switch2)))
-
-  ;; (def result1 (switch1 x))
-;;   (cond
- ;; TODO match should create a let bind -- we would like to unwrap the value in the success-type 
-;;     (:success result) (switch2 s)
-;;     (:failure result) (Failure. f)))

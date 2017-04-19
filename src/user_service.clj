@@ -1,5 +1,5 @@
 (ns user-service
-  (:require [rop :refer [=>= bind]])
+  (:require [rop :refer [>>= bind]])
   (:import [rop Success Failure]))
 
 (defrecord Request [^String name
@@ -32,5 +32,5 @@
   [input]
   (-> input
       validate-email-not-blank
-      (=>= validate-name-not-blank
+      (>>= validate-name-not-blank
            validate-name-length)))
