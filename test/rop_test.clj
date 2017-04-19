@@ -70,4 +70,54 @@
          (rop/>>= no
                   succeeding-switch))))
 
-(deftest >>=-with=multiple-switches)
+(deftest >>=-with-multiple-switches)
+
+(deftest >=>-with-two-switches
+  (def combined-failing (rop/>=> failing-switch
+                                 failing-switch))
+  (def combined-succeeding (rop/>=> succeeding-switch
+                                    succeeding-switch))
+  (def succeeding-failing (rop/>=> succeeding-switch
+                                   failing-switch))
+  (def failing-succeeding (rop/>=> failing-switch
+                                   succeeding-switch))
+
+  (is (= (Failure. (str msg-failure msg-yes))
+         (rop/>>= yes
+                  combined-failing)))
+  (is (= (Failure. (str msg-failure msg-yes))
+         (rop/>>= yes
+                  succeeding-failing)))
+  (is (= (Failure. (str msg-failure msg-yes))
+         (rop/>>= yes
+                  failing-succeeding)))
+  (is (= (Success. msg-yes)
+         (rop/>>= yes
+                  combined-succeeding)))
+  (is (= (Failure. msg-no)
+         (rop/>>= no
+                  combined-failing)))
+  (is (= (Failure. msg-no)
+         (rop/>>= no
+                  succeeding-failing)))
+  (is (= (Failure. msg-no)
+         (rop/>>= no
+                  failing-succeeding)))
+  (is (= (Failure. msg-no)
+         (rop/>>= no
+                  combined-succeeding))))
+
+(deftest >=>-with-multiple-switches
+  ;; (def multiple-succeeding (rop/>=> succeeding-switch
+  ;;                                   succeeding-switch
+  ;;                                   succeeding-switch))
+  ;; (def multiple-failing (rop/>=> failing-switch
+  ;;                                failing-switch
+  ;;                                failing-switch))
+  ;; (def succeeding-failing-succeeding (rop/>=> succeeding-switch
+  ;;                                             failing-switch
+  ;;                                             succeeding-switch))
+  ;; (def failing-succeeding-failing (rop/>=> failing-switch
+  ;;                                          succeeding-switch
+  ;;                                          failing-switch))
+  )

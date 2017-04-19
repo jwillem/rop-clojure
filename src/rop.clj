@@ -28,8 +28,13 @@
   ((bind switch-function) result))
 
 (defn >=>
-  "Takes one or multiple switch-functions and composes them together."
+  "Takes one or multiple switch-functions and composes them together.
+  It wont fit in a two-track-chain yet."
   [switch1 switch2]
   ;; TODO use apply, use rest-argument to catch all terms
-  (-> switch1
-      (bind switch2)))
+  ;; TODO define in terms of bind and comp
+  (fn [result]
+    (match [(switch1 result)]
+      [{:success s}] (switch2 s)
+      [{:failure f}] (Failure. f)
+      :else (Failure. "Input was no Result!"))))
