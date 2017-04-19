@@ -13,7 +13,7 @@
   "Takes a one-track function and transforms it to a two-track function."
   [switch-function]
   (fn [^Result result]
-    (match [^Result result]
+    (match [result]
       [{:success s}] (switch-function s)
       [{:failure f}] (Failure. f))))
 
