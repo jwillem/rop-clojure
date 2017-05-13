@@ -1,7 +1,10 @@
 (ns rop
   "Railway Oriented Programming (ROP) in Clojure
   It provides a toolset of higher-order-functions to maintain a design-by-error philosophy.
-  When used as a fundamental api concept it can help to build strong solid software-modules."
+  When used as a fundamental api concept it can help to build strong solid software-modules.
+  
+  Original Idea in F# by Scott Wlaschin.
+  See corresponding test-file for more documentation."
   (:require [clojure.core.match :refer [match]]))
 
 (defrecord Success [^Object success])

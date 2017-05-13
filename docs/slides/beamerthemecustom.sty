@@ -13,6 +13,7 @@
 \ProvidesPackage{beamerthemecustom}[2016/11/29]
 
 \usepackage{eso-pic}
+\usepackage{wallpaper}
 
 \newif\if@doSans
 \@doSansfalse
@@ -173,7 +174,8 @@
 \setbeamertemplate{title page}
 {
 	% Add background to title page
-	% \AddToShipoutPictureFG*{\includegraphics[width=\paperwidth]{lamda.pdf}}
+	\AddToShipoutPictureFG*{\includegraphics[width=\paperwidth]{intro_rails.pdf}}
+        % \ThisCenterCornerWallPaper{1}{intro_rails.pdf}
 	\begin{minipage}[b][\paperheight]{\textwidth}
 	\vspace*{5mm}
 	% \includegraphics[height=14mm]{./logo}\par

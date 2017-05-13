@@ -2,7 +2,8 @@
   (:require [rop :refer [>>= bind]])
   (:import [rop Success Failure]))
 
-(defrecord Request [^String name
+(defrecord Request [^String type
+                    ^String name
                     ^String email])
 
 (defn validate-name-not-blank [input]
@@ -32,5 +33,6 @@
   [input]
   (-> input
       validate-email-not-blank
+      ;; TODO replace by let binding
       (>>= validate-name-not-blank
            validate-name-length)))
