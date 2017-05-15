@@ -5,16 +5,24 @@
   
   Original Idea in F# by Scott Wlaschin.
   See corresponding test-file for more documentation."
-  (:require [clojure.core.match :refer [match]]))
+  (:require [clojure.core.match :refer [match]])
+  (:refer-clojure :exclude [map]))
 
 (defrecord Success [^Object success])
 (defrecord Failure [^Object failure])
-;; (defrecord Result [^Success success
-;;                    ^Failure failure])
+
+(defn succeed
+  "Success-Constructor"
+  [value]
+  (Success. value))
+
+(defn fail
+  "Failure-Constructor"
+  [value]
+  (Failure. value))
 
 (defn bind
-  "Takes a one-track switch-function and connects a Failure-Path to its Result.
-  So it Fits in a Two-track-chain."
+  "An adapter that takes a switch function and creates a new function that accepts two-track values as input."
   [switch-function]
   (fn [result]
     (match [result]
@@ -23,21 +31,57 @@
       :else (Failure. "Input was no Result!"))))
 
 (defn >>=
-  "Takes a Result and pipes it through one or multiple switch-functions.
-  It will fit in a Two-track-chain.
-  "
-  [result switch-function]
-  ;; TODO use apply, use rest-argument to catch all terms
-  ((bind switch-function) result))
+  "Takes a Result and pipes it through one or multiple switch-functions."
+  [result & switch-functions]
+  (reduce #((bind %2) %1)
+          result
+          switch-functions))
 
 (defn >=>
-  "Takes one or multiple switch-functions and composes them together.
-  It wont fit in a two-track-chain yet."
-  [switch1 switch2]
-  ;; TODO use apply, use rest-argument to catch all terms
-  ;; TODO define in terms of bind and comp
+  "Switch composition. A combiner that takes two switch functions and creates a new switch function by connecting them in series."
+  [sw1 sw2]
+  (comp (bind sw2) sw1))
+
+(defn switch
+  "An adapter that takes a normal one-track function and turns it into a switch function. (Also known as a lift in some contexts.)"
+  [fun]
+  (fn [& params]
+    (Success. (apply fun params))))
+
+(defn tee
+  "An adapter that takes a dead-end function and turns it into a one-track function that can be used in a data flow. (Also known as tap.)"
+  [fun result]
+  (fun result)
+  (result))
+
+(defn try-catch
+  "An adapter that takes a normal one-track function and turns it into a switch function, but also catches exceptions."
+  [fun result]
+  (try
+    (Success. (fun result))
+    (catch Exception e (Failure. (.getMessage e)))))
+
+(defn map2
+  "An adapter that takes two one-track functions and turns them into a single two-track function. (Also known as bimap.)"
+  [success-function failure-function]
   (fn [result]
-    (match [(switch1 result)]
-      [{:success s}] (switch2 s)
-      [{:failure f}] (Failure. f)
+    (match [result]
+      [{:success s}] (success-function s)
+      [{:failure f}] (failure-function f)
       :else (Failure. "Input was no Result!"))))
+
+(defn map
+  "An adapter that takes a normal one-track function and turns it into a two-track function. (Also known as a 'lift' in some contexts.)"
+  [fun]
+  (map2 fun identity))
+
+(defn plus
+  "A combiner that takes two switch functions and creates a new switch function by joining them in 'parallel' and 'adding' the results. 
+  (Also known as ++ and <+> in other contexts.)"
+  [add-success add-failure switch1 switch2 result]
+  (match [(switch1 result) (switch2 result)]
+    [{:success s1} {:success s2}] (Success. (add-success s1 s2))
+    [{:failure f1} {:success _}] (Failure. f1)
+    [{:success _} {:failure f2}] (Failure. f2)
+    [{:failure f1} {:failure f2}] (Failure. (add-failure f1 f2))
+    :else (Failure. "Input was no Result!")))

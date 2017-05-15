@@ -1,45 +1,35 @@
 (ns rop-test
   (:require
    [clojure.test :refer [deftest is]]
-   rop)
-  (:import [rop Success Failure Result]))
+   [rop :refer [fail succeed]]))
 
 (def msg-yes "yes is positive")
-(def yes (Success. msg-yes))
-(def succeeding-switch #(Success. %))
+(def yes (succeed msg-yes))
+(def succeeding-switch #(succeed %))
 
 (def msg-no "no is negative")
-(def no (Failure. msg-no))
-(def msg-failure "Failure with previous Value of: ")
-(def failing-switch #(Failure. (str msg-failure %)))
-
-;; TODO is this verification needed?
-;; (deftest success-is-result
-;;   (is (instance? Result yes)))
-;;
-;; (deftest failure-is-result
-;;   (is (instance? Result no)))
+(def no (fail msg-no))
+(def msg-failure "failwith previous Value of: ")
+(def failing-switch #(fail (str msg-failure %)))
 
 (deftest success-is-success
-  (is (true? (instance? Success yes)))
   (is (= msg-yes
          (:success yes)))
   (is (nil? (:failure yes))))
 
 (deftest failure-is-failure
-  (is (true? (instance? Failure no)))
   (is (= msg-no
          (:failure no)))
   (is (nil? (:success no))))
 
 ;; TODO resturcture these cases
 (deftest bind-returns-failure-on-failure
-  ;; bind gets Failure and returns its value as a Failure
-  (is (= (Failure. msg-no)
+  ;; bind gets failand returns its value as a Failure
+  (is (= (fail msg-no)
          ((rop/bind failing-switch) no)))
 
-  ;; bind gets Success and evaluates failing-switch which returns an Failure
-  (is (= (Failure. (str msg-failure msg-yes))
+  ;; bind gets succeedand evaluates failing-switch which returns an Failure
+  (is (= (fail (str msg-failure msg-yes))
          ((rop/bind failing-switch) yes))))
 
 (deftest bind-with-map-as-success-value)
@@ -48,29 +38,49 @@
 
 ;; TODO resturcture these cases
 (deftest bind-returns-success-on-success
-  ;; bind gets Success and evalutes succeeding-switch which returns its value as a Success
-  (is (= (Success. msg-yes)
+  ;; bind gets succeedand evalutes succeeding-switch which returns its value as a Success
+  (is (= (succeed msg-yes)
          ((rop/bind succeeding-switch) yes)))
 
-  ;; bind gets Failure and returns its value as a Failure
-  (is (= (Failure. msg-no)
+  ;; bind gets failand returns its value as a Failure
+  (is (= (fail msg-no)
          ((rop/bind succeeding-switch) no))))
 
 (deftest >>=-with-one-switch
-  (is (= (Failure. (str msg-failure msg-yes))
+  (is (= (fail (str msg-failure msg-yes))
          (rop/>>= yes
                   failing-switch)))
-  (is (= (Success. msg-yes)
+  (is (= (succeed msg-yes)
          (rop/>>= yes
                   succeeding-switch)))
-  (is (= (Failure. msg-no)
+  (is (= (fail msg-no)
          (rop/>>= no
                   failing-switch)))
-  (is (= (Failure. msg-no)
+  (is (= (fail msg-no)
          (rop/>>= no
                   succeeding-switch))))
 
-(deftest >>=-with-multiple-switches)
+(deftest >>=-with-multiple-switches
+  (is (= (fail (str msg-failure msg-yes))
+         (rop/>>= yes
+                  succeeding-switch
+                  succeeding-switch
+                  succeeding-switch
+                  failing-switch)))
+  (is (= (succeed msg-yes)
+         (rop/>>= yes
+                  succeeding-switch
+                  succeeding-switch
+                  succeeding-switch)))
+  (is (= (fail msg-no)
+         (rop/>>= no
+                  failing-switch
+                  failing-switch
+                  failing-switch)))
+  (is (= (fail msg-no)
+         (rop/>>= no
+                  succeeding-switch
+                  succeeding-switch))))
 
 (deftest >=>-with-two-switches
   (def combined-failing (rop/>=> failing-switch
@@ -82,42 +92,32 @@
   (def failing-succeeding (rop/>=> failing-switch
                                    succeeding-switch))
 
-  (is (= (Failure. (str msg-failure msg-yes))
+  (is (= (fail (str msg-failure msg-yes))
          (rop/>>= yes
                   combined-failing)))
-  (is (= (Failure. (str msg-failure msg-yes))
+  (is (= (fail (str msg-failure msg-yes))
          (rop/>>= yes
                   succeeding-failing)))
-  (is (= (Failure. (str msg-failure msg-yes))
+  (is (= (fail (str msg-failure msg-yes))
          (rop/>>= yes
                   failing-succeeding)))
-  (is (= (Success. msg-yes)
+  (is (= (succeed msg-yes)
          (rop/>>= yes
                   combined-succeeding)))
-  (is (= (Failure. msg-no)
+  (is (= (fail msg-no)
          (rop/>>= no
                   combined-failing)))
-  (is (= (Failure. msg-no)
+  (is (= (fail msg-no)
          (rop/>>= no
                   succeeding-failing)))
-  (is (= (Failure. msg-no)
+  (is (= (fail msg-no)
          (rop/>>= no
                   failing-succeeding)))
-  (is (= (Failure. msg-no)
+  (is (= (fail msg-no)
          (rop/>>= no
                   combined-succeeding))))
 
-(deftest >=>-with-multiple-switches
-  ;; (def multiple-succeeding (rop/>=> succeeding-switch
-  ;;                                   succeeding-switch
-  ;;                                   succeeding-switch))
-  ;; (def multiple-failing (rop/>=> failing-switch
-  ;;                                failing-switch
-  ;;                                failing-switch))
-  ;; (def succeeding-failing-succeeding (rop/>=> succeeding-switch
-  ;;                                             failing-switch
-  ;;                                             succeeding-switch))
-  ;; (def failing-succeeding-failing (rop/>=> failing-switch
-  ;;                                          succeeding-switch
-  ;;                                          failing-switch))
-  )
+(deftest switch
+  (def plus-as-switch (rop/switch +))
+  (is (= (succeed 4)
+         (plus-as-switch 2 2))))
