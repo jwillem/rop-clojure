@@ -1,7 +1,7 @@
 # rop-clojure
 "Railway Oriented Programming" in Clojure
 
-![title-page rop](https://github.com/jwillem/rop-clojure/blob/master/docs/assets/images/intro_rails.pdf?raw=true)
+![title-page rop](docs/assets/images/intro_rails.png?raw=true)
 
 ## Status
 Readme is yet tbd..
