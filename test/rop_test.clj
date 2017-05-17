@@ -121,3 +121,9 @@
   (def plus-as-switch (rop/switch +))
   (is (= (succeed 4)
          (plus-as-switch 2 2))))
+
+;; (deftest map
+;;   (is (= ()
+;;        (rop/map )
+;;        ))
+  ;; )

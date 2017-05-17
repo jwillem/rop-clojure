@@ -21,14 +21,21 @@
   [value]
   (Failure. value))
 
+(defn switch
+  "An adapter that takes a normal one-track function and turns it into a switch function.
+  (Also known as a lift in some contexts.)"
+  [fun]
+  (fn [& params]
+    (succeed (apply fun params))))
+
 (defn bind
   "An adapter that takes a switch function and creates a new function that accepts two-track values as input."
   [switch-function]
   (fn [result]
     (match [result]
       [{:success s}] (switch-function s)
-      [{:failure f}] (Failure. f)
-      :else (Failure. "Input was no Result!"))))
+      [{:failure f}] (fail f)
+      :else (fail "Input was no Result!"))))
 
 (defn >>=
   "Takes a Result and pipes it through one or multiple switch-functions."
@@ -42,14 +49,9 @@
   [sw1 sw2]
   (comp (bind sw2) sw1))
 
-(defn switch
-  "An adapter that takes a normal one-track function and turns it into a switch function. (Also known as a lift in some contexts.)"
-  [fun]
-  (fn [& params]
-    (Success. (apply fun params))))
-
 (defn tee
-  "An adapter that takes a dead-end function and turns it into a one-track function that can be used in a data flow. (Also known as tap.)"
+  "An adapter that takes a dead-end function and turns it into a one-track function that can be used in a data flow.
+  (Also known as tap.)"
   [fun result]
   (fun result)
   (result))
@@ -58,30 +60,30 @@
   "An adapter that takes a normal one-track function and turns it into a switch function, but also catches exceptions."
   [fun result]
   (try
-    (Success. (fun result))
-    (catch Exception e (Failure. (.getMessage e)))))
+    (succeed (fun result))
+    (catch Exception e (fail (.getMessage e)))))
 
-(defn map2
+(defn map-parallel
   "An adapter that takes two one-track functions and turns them into a single two-track function. (Also known as bimap.)"
   [success-function failure-function]
   (fn [result]
     (match [result]
       [{:success s}] (success-function s)
       [{:failure f}] (failure-function f)
-      :else (Failure. "Input was no Result!"))))
+      :else (fail "Input was no Result!"))))
 
 (defn map
   "An adapter that takes a normal one-track function and turns it into a two-track function. (Also known as a 'lift' in some contexts.)"
   [fun]
-  (map2 fun identity))
+  (map-parallel fun identity))
 
 (defn plus
   "A combiner that takes two switch functions and creates a new switch function by joining them in 'parallel' and 'adding' the results. 
   (Also known as ++ and <+> in other contexts.)"
   [add-success add-failure switch1 switch2 result]
   (match [(switch1 result) (switch2 result)]
-    [{:success s1} {:success s2}] (Success. (add-success s1 s2))
-    [{:failure f1} {:success _}] (Failure. f1)
-    [{:success _} {:failure f2}] (Failure. f2)
-    [{:failure f1} {:failure f2}] (Failure. (add-failure f1 f2))
-    :else (Failure. "Input was no Result!")))
+    [{:success s1} {:success s2}] (succeed (add-success s1 s2))
+    [{:failure f1} {:success _}] (fail f1)
+    [{:success _} {:failure f2}] (fail f2)
+    [{:failure f1} {:failure f2}] (fail (add-failure f1 f2))
+    :else (fail "Input was no Result!")))

@@ -25,7 +25,9 @@
 \maketitle
 
 \begin{frame}[noframenumbering,plain]{Project-Repository}
-  \texttt{https://github.com/jwillem/rop-clojure}
+  \includegraphics[width=0.8\textwidth]{google.pdf}
+  \\[20pt]
+  \centering{\tt https://github.com/jwillem/rop-clojure}
 \end{frame}
 
 \section*{Gliederung}
@@ -35,100 +37,172 @@
 
 \begin{frame}{Scott Wlaschin}
   \setcounter{framenumber}{1}
-\includegraphics[width=\textwidth]{wlaschin.pdf}
-\\[4pt]
-https://\textbf{fsharp}forfunandprofit.com/
+  \includegraphics[width=\textwidth]{wlaschin.pdf}
+  \\[4pt]
+  {\tt https://\textbf{fsharp}forfunandprofit.com/}
 \end{frame}
 
 % quote as section
-\section["`Langes langes Zitat, Lorem Ipsum, weil deswegen und so weiter. Foobar is barbaz and so on."' \small{(Scott Wlaschin, Conference 2015)[1]}]{Who?}
+\section["`Well, I Suppose you don't need to know about monads. You only need to use 'Maybe' --~Maybe What? -- 'Maybe' the monad. -- Maybe the monad what? -- Now I think about it. 'Either' might be better... --~Either what?"' \small{(Scott~Wlaschin,~NDC~Conference~2014) [1]}]{Who?}
 
 \begin{frame}{Concept}
   \setcounter{framenumber}{3}
-\includegraphics[width=\textwidth]{wlaschin_rop.pdf}
+  \includegraphics[width=\textwidth]{wlaschin_rop.pdf}
+  \\[4pt]
+  \texttt{[1] https://vimeo.com/113707214}
 \end{frame}
 
 \section{"`Happy-Path"'}
-  \begin{frame}{Usecase: Update Firstname + Email of User (1/2)}
-    \begin{columns}[c]
+\begin{frame}{Usecase: Update Firstname + Email of User (1/2)}
+  \begin{columns}[c]
     \column{.6\textwidth}
-        \includegraphics[width=\textwidth]{usecase.pdf}
+    \includegraphics[width=\textwidth]{usecase.pdf}
     \column{.4\textwidth}
+    {\tt Request:}
+    \\
     \{\\
       "type": ``user",\\
+      ``id": ``k48mdsjk",\\
       "firstname": "Max",\\
       ``email": \\~~~~``max@muster.tld"\\
     \}
-    \end{columns}
-  \end{frame}
-  \begin{frame}{User-Validation mit Node (JS)}
-  \end{frame}
-  \note[itemize]{%
-      \item node-coding-style
-  }
-
-\section{Error by design}
-  \begin{frame}{Usecase: Update Firstname + Email of User (2/2)}
-    \textbf{Und sinnvolle Fehler zurückgeben.}
-    \begin{columns}[c]
-    \column{.6\textwidth}
-    \\ \includegraphics[width=\textwidth]{usecase_error.pdf}
-    \column{.4\textwidth}
+    \\
+    {\tt Response:}
+    \\
     \{\\
       "type": ``user",\\
+      ``id": ``k48mdsjk",\\
+      ``\textit{key}": \textit{value}\\
+      ..\\
+    \}
+  \end{columns}
+\end{frame}
+\begin{frame}{Usecase happy-path}
+  \includegraphics[width=\textwidth]{data_pipe.pdf}
+\end{frame}
+
+\section{Error by design}
+\begin{frame}{Usecase: Update Firstname + Email of User (2/2)}
+  \begin{columns}[c]
+    \column{.5\textwidth}
+  \textbf{Und sinnvolle Fehler zurückgeben.}
+    \includegraphics[width=\textwidth]{usecase_error.pdf}
+    \column{.5\textwidth}
+    {\tt Request:}
+    \{\\"type": ``user",\\
       "firstname": `` `` ,\\
       ``email":\\
       ~~~~``max@@@muster.tld"\\
     \}
-    \end{columns}
-  \end{frame}
-  \begin{frame}{Data-Flow mit Clojure}
-     \includegraphics[width=\textwidth]{data_flow.pdf}
-  \end{frame}
+    \\
+    {\tt Response:}
+    \{\\
+      "result": \{\\
+      ~~``success": \{\\~~~~"type": ``user",\\
+      ~~~~``id": ``k48mdsjk",\\
+      ~~~~``\textit{key}": \textit{value}\\
+      ~~~~..\\
+      ~~\}\\
+    \}
+    \\
+    \texttt{Header: 200 OK | ..}
+  \end{columns}
+\end{frame}
+\begin{frame}{Usecase mit Error-Handling}
+  \includegraphics[width=\textwidth]{data_pipe_error.pdf}
+\end{frame}
 
 \section{"`Railway-Oriented-Programming"'}
-\begin{frame}{Äpfel \& Birnen}
-  \end{frame}
 \begin{frame}{Grundlegende Schienenteile}
-    \begin{columns}[c]
-    \column{.5\textwidth}
-      \begin{itemize}
-        \item switch-function
-        \item<2-> bind
-        \item<3-> pipe-bind
-        \item<4-> compose
-        \item<5-> clojure seq-abstraction
-        \item<6-> rest-parameters, \texttt{apply}
-      \end{itemize}
-    \column{.5\textwidth}
-    % \includegraphics[width=\textwidth]{parallel.pdf}
-    \end{columns}
-  \end{frame}
-  \begin{frame}{User-Validation mit ROP}
-  \end{frame}
+  % \begin{columns}[c]
+  % \column{.5\textwidth}
+  % \begin{itemize}
+  %   \item succeed-fail
+  %   \item switch-function
+  %   \item bind
+  %   \item pipe-bind
+  %   \item switch-compose
+  %   \item core, core.match
+  %   \item clojure seq-abstraction
+  %   \item rest-parameters, map, apply
+  % \end{itemize}
+  \includegraphics[width=\textwidth]{rails_overview.pdf}
+  % \column{.5\textwidth}
+  % \includegraphics[width=\textwidth]{parallel.pdf}
+  % \end{columns}
+\end{frame}
+\begin{frame}{succeed \& fail}
+%   \begin{itemize}
+%     \item \texttt{(succeed 'Hello Clojure!')}
+% \item \texttt{(fail 'Oh no!')}
+% \end{itemize}
+  \includegraphics[width=\textwidth]{succeed_fail.pdf}
+\end{frame}
+\begin{frame}{switch-function}
+  % \begin{itemize}
+  %   \item \texttt{((switch +) 2 2)}
+  % \end{itemize}
+  \includegraphics[width=\textwidth]{switch.pdf}
+\end{frame}
+\begin{frame}{bind}
+  % \begin{itemize}
+  %   \item \texttt{((bind \#(succeed \%)) (succeed "42"))}
+  %   \item \texttt{((>>= \#(succeed \%) \#(fail (str "Fehler: " \%))) \\(succeed "42"))}
+  % \end{itemize}
+  \includegraphics[width=\textwidth]{bind.pdf}
+\end{frame}
+\begin{frame}{compose}
+  % \begin{itemize}
+  %   \item \texttt{((>=> ((switch +) 2 2)((switch *) 2))\\ (succeed "42"))}
+  % \end{itemize}
+  \includegraphics[width=\textwidth]{compose.pdf}
+\end{frame}
+% \begin{frame}{User-Validation mit ROP}
+%   detail
+% \end{frame}
 
-  % \note[itemize]{%
-  %     \item 
-  % }
+% \note[itemize]{%
+%     \item 
+% }
 
-  \section{Ausblick}
-  \begin{frame}{Weitere Schienenteile}
-    \begin{itemize}
-      \item try/catch
-      \item log
-      \item ..
-    \end{itemize}
-  \end{frame}
-  \begin{frame}{Fazit}
-  \end{frame}
-  
-  \begin{frame}[noframenumbering,plain]{Fin}
-    Danke für die Aufmerksamkeit. -- Fragen?
-  \end{frame}
-  \begin{frame}[noframenumbering,plain]{References}
-    \begin{itemize}
-      \item[1] \texttt{https://vimeo.com/113707214}
-      \item[2] \texttt{https://guide.elm-lang.org/error\_handling}
-    \end{itemize}
-  \end{frame}
+\section{Ausblick}
+% \begin{frame}{Äpfel \& Birnen}
+%   unterschied compose und bind
+%   \\
+%   als grafiken
+% \end{frame}
+\begin{frame}{Weitere Schienenteile}
+  \begin{itemize}
+    \item try/catch
+    \item log
+    \item tee
+    \item map-parallel
+    \item ..beliebig als Basis nutzbar
+  \end{itemize}
+\end{frame}
+\begin{frame}{Fazit}
+  \begin{itemize}
+    \item kann am Anfang im Vergleich sehr kompliziert sein
+    \item bei konsistenter Anwendung wirklich hilfreich
+    \item Data-Flow mit Step pro Usecase wird angestrebt
+    \item leicht erweiter- und wartbar
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[noframenumbering,plain]{Fin}
+  Danke für die Aufmerksamkeit. -- Fragen?
+\end{frame}
+\begin{frame}[noframenumbering,plain]{References}
+  \begin{itemize}
+    \item Category Theory and Algebraic abstractions in Clojure
+      \\
+      \texttt{https://github.com/funcool/cats}
+    \item Gut gelößtes Sprachkonzept mit Maybe \& Either in Elm
+      \\
+      \texttt{https://guide.elm-lang.org/error\_handling}
+    \item Match: wichtig überall
+      \\
+      https://github.com/clojure/core.match/wiki/Basic-usage
+  \end{itemize}
+\end{frame}
 \end{document}
