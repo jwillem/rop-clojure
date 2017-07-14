@@ -15,7 +15,9 @@
 
 \begin{document}
   \title{Railway-Oriented-Programming in Clojure -- Funktionales Error-Handling}
-  \author{Jan-Philipp~Willem,~Fakultät für Informatik, Hochschule Mannheim}
+  \author{Jan-Philipp~Willem,~Fakultät für Informatik, Hochschule Mannheim\\ 
+    EFP: Entwurfsmuster für funktionale Programmierung, Sommersemster 2017
+  }
   \markboth{Railway-Oriented-Programming in Clojure -- Funktionales Error-Handling}{}
 
   \IEEEtitleabstractindextext{%
@@ -51,10 +53,9 @@ Im Folgenden soll eine Umsetzung dieser Ideen in der Sprache Clojure und dessen 
   Ein häufiger Fehler beim Entwickeln von Software ist die ausschließliche Betrachtung des \textbf{"`Happy-Path"'} bei einem Ausführen des Programms.
   Dies bedeutet der jeweilige Programmierer ignoriert die Existenz einer ganzen Reihe an Fehlern, welche auftreten könnten.
   Warum er so handeln sollte, könnte am Budget des jeweiligen Projekts oder aber auch an seiner Unerfahrenheit geschuldet sein.
-  Allerdings ist es genauso möglich, dass bewusst gescheut wurde, den Code durch eine komplizierte Fehlerbehandlung aufzublähen.\\
+  Allerdings ist es genauso möglich, dass bewusst gescheut wurde, den Code durch eine komplizierte Fehlerbehandlung aufzublähen.
   Das Verhalten eines Programms nach einem Fehlerfall zu definieren, ist keinesfalls einfach und wurde daher bereits in vielen Programmiersprachen zu lösen versucht.
-  Merkmale einer guten Lösung, sind vor Allem ihre Wartbarkeit und in wie Weit der Code nach ihrer Integration die gleiche Eleganz aufweist, bzw. in wie Weit man die eigentliche Intention beim Lesen des Codes noch erkennen kann.
-
+  Merkmale einer guten Lösung, sind vor Allem ihre Wartbarkeit und in wie Weit der Code nach ihrer Integration die gleiche Eleganz aufweist, bzw. in wie Weit man die eigentliche Intention beim Lesen des Codes noch erkennen kann.\\
   Wlaschin schlägt daher vor, sich bereits bei der Architektur und dem Entwickeln Gedanken über Fehler und ihre Implikationen zu machen. Er nennt dies \textbf{"`Error-by-design"'}, indem man Fehlermeldungen als integraler Bestandteil der Applikation bzw. von ihren Funktionen macht.
   % \subsection{"`Error-by-design"'}
 
