@@ -14,7 +14,7 @@
 \hyphenation{}
 
 \begin{document}
-  \title{Railway-Oriented-Programming in Clojure -- \LARGE Funktionales Error-Handling}
+  \title{Railway-Oriented-Programming in Clojure -- Funktionales Error-Handling}
   \author{Jan-Philipp~Willem,~Fakultät für Informatik, Hochschule Mannheim}
   \markboth{Railway-Oriented-Programming in Clojure -- Funktionales Error-Handling}{}
 
@@ -125,7 +125,8 @@ Im Folgenden soll eine Umsetzung dieser Ideen in der Sprache Clojure und dessen 
   Viele bisherige Implementierungen, welche man verwenden möchte, beruhen auf der Fehlerbehandlung von \textbf{try/catch}, beziehungsweise auf Exceptions.
   Um diese jeweiligen Funktionen in ein Zwei-Wege-System zu integrieren, kann man wiederum eine Hilfsfunktion bauen.\\
   Seiteneffekte wie \textbf{logging} oder beliebige Andere wie eine Persistenz in einer Datenbank (vergl. cli-tool \textbf{tee}), können mit der gleichen Vorgehensweise genutzt werden.
-  Entscheidend dabei ist, dass die Seiteneffekte keine Änderungen an dem Ergebnis des Datenflusses machen, sondern nur externe Ereignisse auslösen.\\
+  Entscheidend dabei ist, dass die Seiteneffekte keine Änderungen an dem Ergebnis des Datenflusses machen, sondern nur externe Ereignisse auslösen.
+  Wlaschin bezeichnet diese Funktionen auch als Dead-End-Functions, weil ihr Schienenteil ein Enstück darstellt.\\
   Um mehrere Ergebnisse von switch-functions zu evaluieren, ohne bei einem Fehler sofort abzubrechen, bietet sich ein \textbf{map-parallel} an.
   Solch ein Verhalten möchte man beispielsweise bei einer Formular-Validierung erhalten, welche mehrere Funktionen pro Feld nutzt.
 
@@ -134,7 +135,7 @@ Im Folgenden soll eine Umsetzung dieser Ideen in der Sprache Clojure und dessen 
   Weiterhin ist bei der Arbeit mit einem Team darauf zu achten, dass alle Entwickler neue Funktionen in den ROP-Datenfluss integrieren sollten.
   Bei einer konsistenten Anwendung, kann es im Gegenzug wirklich hilfreich sein, da man nun nicht mehr raten muss, ob eine Funktion bei einem Fehler nun nichts tut, Null oder bspw. einen negativen Wert zurückgibt.
   Man erhält so eine stabile und leicht wartbare Basis für eigene Implementierungen.\\
-  Als ein gutes Beispiel für konsistente Fehlerbehandlung, sind die Grund-Funktionen von Elm~\cite{elm} zu betrachten, welche grundsätzlich alle bei kritischen Stellen eine Result- oder Maybe-Monade für den Rückgabewert nutzen.\\
+  Als ein gutes Beispiel für konsistente Fehlerbehandlung, sind die Grund-Funktionen von Elm~\cite{elm} zu betrachten, welche grundsätzlich alle, bei kritischen Stellen, eine Result- oder Maybe-Monade für den Rückgabewert nutzen.\\
   Gegen Ende des Projektes wurde der Schreiber dieser Arbeit auf zwei weitere interessante Umsetzungen von ROP in Clojure aufmerksam. \cite{otherrop} bedient sich einer Clojure-Library~\cite{clojurecats}, welche Konzepte der Kategorie-Theorie umsetzt.
   Und eine weitere Implementierung~\cite{otherrop2}, ist bereits als Paket in Leiningen verfügbar.
 
