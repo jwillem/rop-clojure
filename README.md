@@ -4,13 +4,14 @@
 ![title-page rop](docs/assets/images/intro_rails.png?raw=true)
 
 ## Status
-Readme is yet tbd..
-Not yet released in package systems.
+### Experimental - do not use yet.
+- [ ] release in package systems.
+- [x] At 2017-05-17 I've presented the topic at hochschule mannheim. *Please see the slides as pdf.*
+- [x] A corresponding paper should also be delivered. *Please see the paper as pdf.*
 
-Today(2017-05-17) I've presented the topic at hochschule mannheim. *Please see the slides as pdf.*
 
 ## Slides
 [2017_rop-clojure_willem.pdf](docs/slides/2017_rop-clojure_willem.pdf)
 
 ## Paper
-A corresponding paper to the slides/presentation are yet tbd..
+[rop-clojure_Willem_2017.pdf](docs/paper/rop-clojure_Willem_2017.pdf)
