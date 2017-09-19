@@ -5,13 +5,16 @@
 
 ## Status
 ### Experimental - do not use yet.
-- [ ] release in package systems.
 - [x] At 2017-05-17 I've presented the topic at hochschule mannheim. *Please see the slides as pdf.*
 - [x] A corresponding paper should also be delivered. *Please see the paper as pdf.*
+- [ ] further improve.
+  - use of Macros.
+  - ..
+- [ ] release in package systems.
 
 
 ## Slides
-[2017_rop-clojure_willem.pdf](docs/slides/2017_rop-clojure_willem.pdf)
+[rop-clojure_slides_Willem_2017.pdf](docs/slides/rop-clojure_slides_Willem_2017.pdf)
 
 ## Paper
 [rop-clojure_Willem_2017.pdf](docs/paper/rop-clojure_Willem_2017.pdf)
